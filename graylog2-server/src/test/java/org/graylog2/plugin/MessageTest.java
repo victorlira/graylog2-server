@@ -349,20 +349,21 @@ public class MessageTest {
     }
 
     @Test
-    public void testValidKeys() throws Exception {
+    public void testValidKeys() {
+        assertTrue(Message.validKey("a"));
         assertTrue(Message.validKey("foo123"));
         assertTrue(Message.validKey("foo-bar123"));
         assertTrue(Message.validKey("foo_bar123"));
         assertTrue(Message.validKey("foo.bar123"));
         assertTrue(Message.validKey("foo@bar"));
         assertTrue(Message.validKey("123"));
+        assertTrue(Message.validKey("foo bar"));
+        assertTrue(Message.validKey("foo/bar"));
         assertTrue(Message.validKey(""));
-        assertFalse(Message.validKey(" foo123"));
-        assertFalse(Message.validKey("foo123 "));
-        assertFalse(Message.validKey("foo bar"));
+        assertTrue(Message.validKey(" foo123"));
+        assertTrue(Message.validKey("foo123 "));
         assertFalse(Message.validKey("foo+bar"));
         assertFalse(Message.validKey("foo$bar"));
-        assertFalse(Message.validKey(" "));
     }
 
     @Test
@@ -372,18 +373,18 @@ public class MessageTest {
         assertEquals("foo-bar123", Message.cleanKey("foo-bar123"));
         assertEquals("foo_bar123", Message.cleanKey("foo_bar123"));
         assertEquals("foo.bar123", Message.cleanKey("foo.bar123"));
+        assertEquals("foo bar", Message.cleanKey("foo bar"));
+        assertEquals("foo/bar", Message.cleanKey("foo/bar"));
         assertEquals("foo@bar", Message.cleanKey("foo@bar"));
         assertEquals("123", Message.cleanKey("123"));
-        assertEquals("", Message.cleanKey(""));
+        assertEquals(" ", Message.cleanKey(" "));
 
-        assertEquals("foo_bar", Message.cleanKey("foo bar"));
         assertEquals("foo_bar", Message.cleanKey("foo+bar"));
         assertEquals("foo_bar", Message.cleanKey("foo$bar"));
         assertEquals("foo_bar", Message.cleanKey("foo{bar"));
         assertEquals("foo_bar", Message.cleanKey("foo,bar"));
         assertEquals("foo_bar", Message.cleanKey("foo?bar"));
-        assertEquals("foo___bar", Message.cleanKey("foo +?bar"));
-        assertEquals("_", Message.cleanKey(" "));
+        assertEquals("foo __bar", Message.cleanKey("foo +?bar"));
     }
 
     @Test
